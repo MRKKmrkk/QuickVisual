@@ -1,14 +1,9 @@
-import pandas
+from quickVisual import *
 
-df = pandas.DataFrame({
-    "word": ["a", "b", "c"],
-    "num": [11, 22, 33]
-})
+qv = QuickVisual(dataFrameFromCSV=False)
 
-words = df['word'].tolist()
-nums = df['num'].tolist()
+page = Page("index")
+qv.addPage(page)
 
-datas = []
-for i in range(len(words)):
-    datas.append((words[i], nums[i]))
-print(datas)
+qv.generate()
+

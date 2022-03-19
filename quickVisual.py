@@ -46,7 +46,7 @@ class QuickVisual():
         with open(ROOT_PATH + "\\static\\qv\\echarts.js", "w", encoding="utf-8") as f, open("resource\\echarts.js", "r", encoding="utf-8") as ec:
             f.write(ec.read())
 
-        self.dataFrameFromCSV = True
+        self.dataFrameFromCSV = dataFrameFromCSV
         self.pages = []
 
     def addPage(self, page):
@@ -58,6 +58,7 @@ class QuickVisual():
         if self.dataFrameFromCSV:
             flaskCode += DATAFRAME_FROM_CSV
         else:
+            flaskCode += CONNECTION
             flaskCode += DATAFRAME_FROM_MYSQL
 
         for page in self.pages:
