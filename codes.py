@@ -93,7 +93,6 @@ def %s():
     )
     return Markup(c.dump_options_with_quotes())\n"""
 
-
 class ChartCode:
 
     def __init__(self, name, pathOrSql):
@@ -115,7 +114,6 @@ def %s():
         %s
     )
     return Markup(c.dump_options_with_quotes())\n""" % (self.name, self.name, self.pathOrSql, pre, content)
-
 
 class BarCode(ChartCode):
 
@@ -143,8 +141,7 @@ class BarCode(ChartCode):
         if len(self.yNames) != len(self.yDescs):
             raise RuntimeError("yNames 的数量必须和 yDesc一致")
 
-        addYaxis = [".add_yaxis(\"%s\", df['%s'].tolist())\n" % (self.yDescs[x], self.yNames[x]) for x in
-                    range(len(self.yDescs))]
+        addYaxis = [".add_yaxis(\"%s\", df['%s'].tolist())\n" % (self.yDescs[x], self.yNames[x]) for x in range(len(self.yDescs))]
 
         return super(BarCode, self).generate(
             content % (
@@ -154,7 +151,6 @@ class BarCode(ChartCode):
                 self.xAxisName
             )
         )
-
 
 class PieCode(ChartCode):
 
@@ -174,7 +170,6 @@ class PieCode(ChartCode):
         .set_series_opts(label_opts=opts.LabelOpts(formatter="{d}%%"))""" % (self.partDesc, self.partName, self.numName)
         )
 
-
 class LineCode(ChartCode):
 
     def __init__(self, name, xName, yNames, yDescs, xAxisName, yAxisName, pathOrSql):
@@ -188,20 +183,18 @@ class LineCode(ChartCode):
         super(LineCode, self).__init__(name, pathOrSql)
 
     def generate(self):
+
         if len(self.yNames) != len(self.yDescs):
             raise RuntimeError("yNames 的数量必须和 yDesc一致")
 
-        addYaxis = [".add_yaxis(\"%s\", df['%s'].tolist())\n" % (self.yDescs[x], self.yNames[x]) for x in
-                    range(len(self.yDescs))]
+        addYaxis = [".add_yaxis(\"%s\", df['%s'].tolist())\n" % (self.yDescs[x], self.yNames[x]) for x in range(len(self.yDescs))]
 
         return super(LineCode, self).generate("""Line()
         .add_xaxis(df["%s"].values.tolist())
         %s
         .set_global_opts(
         yaxis_opts=opts.AxisOpts(name="%s"),
-        xaxis_opts=opts.AxisOpts(name="%s"))""" % (
-        self.xName, "        ".join(addYaxis).strip(), self.yAxisName, self.xAxisName))
-
+        xaxis_opts=opts.AxisOpts(name="%s"))""" % (self.xName, "        ".join(addYaxis).strip(), self.yAxisName, self.xAxisName))
 
 class WordCloudCode(ChartCode):
 
@@ -222,5 +215,8 @@ class WordCloudCode(ChartCode):
         datas.append((words[i], nums[i]))\n""")
 
 
+
 if __name__ == '__main__':
     print(WordCloudCode("WordCloudCode", "words", "nums", "a.csv").generate())
+
+

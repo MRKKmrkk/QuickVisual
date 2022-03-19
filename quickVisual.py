@@ -1,5 +1,7 @@
 import re
 
+from bs4 import BeautifulSoup
+
 from config import *
 import os
 from models import *
@@ -34,6 +36,22 @@ def clean():
         with open(path + file, "w", encoding="utf-8") as f:
             f.write(content)
     printWithSchema("end clean")
+
+
+def dropHref():
+    printWithSchema("start drop href")
+
+    if not input("使用此函数会使所有a标签无法跳转，输入任意值继续，输入exit退出").strip() == "exit":
+        for file in os.listdir(ROOT_PATH + "\\templates"):
+            html = BeautifulSoup(open(ROOT_PATH + "\\templates\\%s" % file, encoding="utf-8"), "html.parser")
+            for href in html.find_all("a"):
+                if 'href' in href.attrs and href.attrs['href'] != "#":
+                    printWithSchema("drop a tag's href % s" % href.attrs['href'])
+                    href.attrs['href'] = "#"
+            with open(ROOT_PATH + "\\templates\\%s" % file, "w", encoding="utf-8") as f:
+                f.write(html.prettify())
+
+    printWithSchema("drop href done")
 
 
 class QuickVisual():
