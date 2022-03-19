@@ -27,84 +27,55 @@ class Page:
 
 class Port:
 
-    def __init__(self, name):
+    def __init__(self, name, code):
         self.name = name
-        self.type = type
+        self.code = code
 
     def generatorJSCode(self):
         return PORT_JS_CODE % (self.name, self.name, self.name, self.name, self.name)
 
+    def generateFlaskCode(self):
+        return self.code.generate()
+
 
 class PiePort(Port):
 
-    def __init__(self, name, partsName, partDesc, valuesName, path):
-        self.partsName = partsName
-        self.valuesName = valuesName
-        self.path = path
-        self.partDesc = partDesc
-        super(PiePort, self).__init__(name)
-
-    def generateFlaskCode(self):
-        return PORT_FLASK_CODE_PIE % (self.name, self.name, self.path, self.partDesc, self.partsName, self.valuesName)
+    def __init__(self, name, partName, partDesc, numName, pathOrSql):
+        self.name = name
+        self.code = PieCode(name, partName, partDesc, numName, pathOrSql)
+        super(PiePort, self).__init__(name, self.code)
 
 
 class BarPort(Port):
 
-    def __init__(self, name, xName, xDesc, yDesc, yName, path):
-        self.xName = xName
-        self.yName = yName
-        self.xDesc = xDesc
-        self.yDesc = yDesc
-        self.path = path
-        super(BarPort, self).__init__(name)
-
-    def generateFlaskCode(self):
-        return PORT_FLASK_CODE_BAR % (
-            self.name, self.name, self.path, self.xName, self.yDesc, self.yName, self.yDesc, self.xDesc)
-
+    def __init__(self,  name, xName, yNames, yDescs, xAxisName, yAxisName, pathOrSql):
+        self.name = name
+        self.code = BarCode(name, xName, yNames, yDescs, xAxisName, yAxisName, pathOrSql)
+        super(BarPort, self).__init__(name, self.code)
 
 class LinePort(Port):
 
-    def __init__(self, name, xName, xDesc, yDesc, yName, path):
-        self.xName = xName
-        self.yName = yName
-        self.xDesc = xDesc
-        self.yDesc = yDesc
-        self.path = path
-        super(LinePort, self).__init__(name)
-
-    def generateFlaskCode(self):
-        return PORT_FLASK_CODE_LINE % (
-            self.name,
-            self.name,
-            self.path,
-            self.xName,
-            self.yDesc,
-            self.yName,
-            self.yDesc,
-            self.xDesc
-        )
-
-
-class CloudWord(Port):
-
-    def __init__(self, name, wordName, numName, pathOrSql):
+    def __init__(self, name, xName, yNames, yDescs, xAxisName, yAxisName, pathOrSql):
         self.name = name
-        self.wrodName = wordName
-        self.numName = numName
-        self.pathOrSql = pathOrSql
-        super(CloudWord, self).__init__(name)
-
-    def generateFlaskCode(self):
-        return PORT_FLASK_CODE_WORDCLOUD % (
-            self.name,
-            self.name,
-            self.pathOrSql,
-            self.wrodName,
-            self.numName,
-            self.name
-        )
+        self.code = LineCode(name, xName, yNames, yDescs, xAxisName, yAxisName, pathOrSql)
+        super(LinePort, self).__init__(name, self.code)
 
 
-if __name__ == '__main__':
-    print(CloudWord("wordCloudDemo", "word", "num", "select * from a").generateFlaskCode())
+# class CloudWord(Port):
+#
+#     def __init__(self, name, wordName, numName, pathOrSql):
+#         self.name = name
+#         self.wrodName = wordName
+#         self.numName = numName
+#         self.pathOrSql = pathOrSql
+#         super(CloudWord, self).__init__(name)
+#
+#     def generateFlaskCode(self):
+#         return PORT_FLASK_CODE_WORDCLOUD % (
+#             self.name,
+#             self.name,
+#             self.pathOrSql,
+#             self.wrodName,
+#             self.numName,
+#             self.name
+#         )
