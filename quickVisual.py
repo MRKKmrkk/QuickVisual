@@ -10,7 +10,7 @@ def printWithSchema(content):
     print("[*] " + content)
 
 
-# 将资添加static前缀
+# 将添加static前缀
 def clean():
     printWithSchema("start clean")
     for file in os.listdir(ROOT_PATH + "\\templates"):

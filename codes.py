@@ -59,7 +59,7 @@ FLASK_INIT_CODE = """
 import pandas
 import pymysql
 from flask import Flask, render_template, request, redirect, url_for
-from pyecharts.charts import Pie, Bar, Line, Scatter
+from pyecharts.charts import Pie, Bar, Line, Scatter, WordCloud
 from pyecharts import options as opts
 from jinja2 import Markup
 
@@ -75,3 +75,20 @@ if __name__ == '__main__':
 
 DATAFRAME_FROM_MYSQL = """\ndef getData(sql):
     return pandas.read_sql(sql, con=CONNECTION)\n"""
+
+PORT_FLASK_CODE_WORDCLOUD = """@app.route("/%s")
+def %s():
+    df = getData("%s")
+    
+    words = df['%s'].tolist()
+    nums = df['%s'].tolist()
+    datas = []
+    for i in range(len(words)):
+        datas.append((words[i], nums[i]))
+        
+    c = (
+        WordCloud()
+        .add("", datas, word_size_range=[20, 100])
+        .set_global_opts(title_opts=opts.TitleOpts(title="%s"))
+    )
+    return Markup(c.dump_options_with_quotes())\n"""

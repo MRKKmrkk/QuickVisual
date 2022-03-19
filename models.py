@@ -60,7 +60,7 @@ class BarPort(Port):
 
     def generateFlaskCode(self):
         return PORT_FLASK_CODE_BAR % (
-        self.name, self.name, self.path, self.xName, self.yDesc, self.yName, self.yDesc, self.xDesc)
+            self.name, self.name, self.path, self.xName, self.yDesc, self.yName, self.yDesc, self.xDesc)
 
 
 class LinePort(Port):
@@ -86,5 +86,25 @@ class LinePort(Port):
         )
 
 
+class CloudWord(Port):
+
+    def __init__(self, name, wordName, numName, pathOrSql):
+        self.name = name
+        self.wrodName = wordName
+        self.numName = numName
+        self.pathOrSql = pathOrSql
+        super(CloudWord, self).__init__(name)
+
+    def generateFlaskCode(self):
+        return PORT_FLASK_CODE_WORDCLOUD % (
+            self.name,
+            self.name,
+            self.pathOrSql,
+            self.wrodName,
+            self.numName,
+            self.name
+        )
+
+
 if __name__ == '__main__':
-    Page("index")
+    print(CloudWord("wordCloudDemo", "word", "num", "select * from a").generateFlaskCode())
