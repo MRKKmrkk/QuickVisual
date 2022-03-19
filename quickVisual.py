@@ -39,8 +39,13 @@ def clean():
 class QuickVisual():
 
     def __init__(self, dataFrameFromCSV=True):
+        printWithSchema("start QuickVisual...")
+
         if not os.path.exists(ROOT_PATH + "\\static\\qv"):
+            printWithSchema("create resource directory: %s" % ROOT_PATH + "\\static\\qv")
             os.mkdir(ROOT_PATH + "\\static\\qv")
+
+        printWithSchema("create jquery-3.3.1.min.js and echarts.js")
         with open(ROOT_PATH + "\\static\\qv\\jquery-3.3.1.min.js", "w", encoding="utf-8") as f, open("resource\\jquery-3.3.1.min.js", "r", encoding="utf-8") as jq:
             f.write(jq.read())
         with open(ROOT_PATH + "\\static\\qv\\echarts.js", "w", encoding="utf-8") as f, open("resource\\echarts.js", "r", encoding="utf-8") as ec:
@@ -56,16 +61,22 @@ class QuickVisual():
 
         flaskCode = FLASK_INIT_CODE
         if self.dataFrameFromCSV:
+            printWithSchema("enable data from csv")
             flaskCode += DATAFRAME_FROM_CSV
         else:
             flaskCode += CONNECTION
             flaskCode += DATAFRAME_FROM_MYSQL
+            printWithSchema("enable data from mysql")
+            printWithSchema("your mysql setting is %s" % CONNECTION.replace("\n", "").replace(" ", ""))
 
         for page in self.pages:
+            printWithSchema("create page %s" % page.name)
+
             flaskCode += page.generateFlaskCode()
             jsCode = ""
 
             for port in page.ports:
+                printWithSchema("create chart port: %s" % port.name)
                 flaskCode += port.generateFlaskCode()
                 jsCode += port.generatorJSCode()
             with open(ROOT_PATH + "\\static\\qv\\%s.js" % page.name, "w", encoding="utf-8") as f:
@@ -73,3 +84,5 @@ class QuickVisual():
 
         with open(ROOT_PATH + "\\" + "qv.py", "w", encoding="utf-8") as f:
             f.write(flaskCode + FLASK_END_CODE)
+
+        printWithSchema("done !")
