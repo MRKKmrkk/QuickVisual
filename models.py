@@ -61,21 +61,10 @@ class LinePort(Port):
         super(LinePort, self).__init__(name, self.code)
 
 
-# class CloudWord(Port):
-#
-#     def __init__(self, name, wordName, numName, pathOrSql):
-#         self.name = name
-#         self.wrodName = wordName
-#         self.numName = numName
-#         self.pathOrSql = pathOrSql
-#         super(CloudWord, self).__init__(name)
-#
-#     def generateFlaskCode(self):
-#         return PORT_FLASK_CODE_WORDCLOUD % (
-#             self.name,
-#             self.name,
-#             self.pathOrSql,
-#             self.wrodName,
-#             self.numName,
-#             self.name
-#         )
+class CloudWord(Port):
+
+    def __init__(self, name, wordName, numName, pathOrSql):
+        self.name = name
+        self.code = WordCloudCode(name, wordName, numName, pathOrSql)
+        super(CloudWord, self).__init__(name, self.code)
+
