@@ -13,6 +13,11 @@ $.ajax({
     }
 });\n"""
 
+PORT_CSS_CODE = """\n#%s {
+    height: 400px;
+    width: 400px;
+}\n"""
+
 PORT_FLASK_CODE_PIE = """\n@app.route("/%s")
 def %s():
     df = getData("%s")

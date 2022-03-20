@@ -92,13 +92,18 @@ class QuickVisual():
 
             flaskCode += page.generateFlaskCode()
             jsCode = ""
+            cssCode = ""
 
             for port in page.ports:
                 printWithSchema("create chart port: %s" % port.name)
                 flaskCode += port.generateFlaskCode()
                 jsCode += port.generatorJSCode()
+                cssCode += PORT_CSS_CODE % port.name
             with open(ROOT_PATH + "\\static\\qv\\%s.js" % page.name, "w", encoding="utf-8") as f:
                 f.write(jsCode)
+            if not os.path.exists(ROOT_PATH + "\\static\\qv\\%s.css" % page.name):
+                with open(ROOT_PATH + "\\static\\qv\\%s.css" % page.name, "w", encoding="utf-8") as f:
+                    f.write(cssCode)
 
         with open(ROOT_PATH + "\\" + "qv.py", "w", encoding="utf-8") as f:
             f.write(flaskCode + FLASK_END_CODE)

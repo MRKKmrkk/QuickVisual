@@ -3,19 +3,67 @@ from pyecharts import options as opts
 
 from quickVisual import *
 
+
+# clean()
+
 qv = QuickVisual()
 
-p = Page("index")
-p.addPort(BarPort(
-    "demoBar",
-    "type",
-    ["num1", "num2"],
-    ["数量1", "数量2"],
-    "种类",
+index = Page("index")
+index.addPort(BarPort(
+    "courseMean",
+    "course",
+    "avg",
+    "品均分",
+    "课程",
+    "品均分",
+    "../data2/courseMean.csv"
+))
+index.addPort(BarPort(
+    "courseLevel",
+    "course",
+    ["不及格", "良", "优"],
+    ["不及格", "良", "优"],
+    "课程",
     "数量",
-    "demo.csv"
+    "../data2/courseLevel.csv"
+))
+index.addPort(LinePort(
+    "groupMean",
+    "group",
+    ["math", "reading", "writing"],
+    ["math", "reading", "writing"],
+    "小组",
+    "平均分",
+    "../data2/groupMean.csv"
+))
+index.addPort(PiePort(
+    "lunchFailCount",
+    "lunch",
+    "餐饮标准",
+    "count",
+    "../data2/lunchFailCount.csv"
 ))
 
-qv.addPage(p)
+index.addPort(PiePort(
+    "genderFailCount",
+    "gender",
+    "性别",
+    "count",
+    "../data2/genderFailCount.csv"
+))
+
+index.addPort(LinePort(
+    "parentEduMean",
+    "parentEdu",
+    ["math", "reading", "writing"],
+    ["math", "reading", "writing"],
+    "父母教育水平",
+    "平均分",
+    "../data2/parentEduMean.csv"
+))
+
+qv.addPage(index)
+
+qv.addPage(Page("login"))
 
 qv.generate()

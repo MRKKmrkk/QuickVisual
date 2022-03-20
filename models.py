@@ -15,6 +15,7 @@ class Page:
             soup.find('body').insert(-1, soup.new_tag('script', attrs={'src': '/static/qv/jquery-3.3.1.min.js'}))
             soup.find('body').insert(-1, soup.new_tag('script', attrs={'src': '/static/qv/echarts.js'}))
             soup.find('body').insert(-1, soup.new_tag('script', attrs={'src': '/static/qv/%s.js' % self.name}))
+            soup.find('head').insert(-1, soup.new_tag('link', attrs={'href': '/static/qv/%s.css' % self.name, 'rel': 'stylesheet'}))
             with open(ROOT_PATH + "\\templates\\%s.html" % name, "w", encoding="utf-8") as f:
                 f.write(soup.prettify())
 
