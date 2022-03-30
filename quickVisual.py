@@ -1,5 +1,7 @@
+import inspect
 import re
 
+import bs4
 from bs4 import BeautifulSoup
 
 from config import *
@@ -13,7 +15,7 @@ def printWithSchema(content):
 
 
 # 将添加static前缀
-def clean():
+def clean1():
     printWithSchema("start clean")
     for file in os.listdir(ROOT_PATH + "\\templates"):
         path = ROOT_PATH + "\\templates\\"
@@ -37,6 +39,34 @@ def clean():
             f.write(content)
     printWithSchema("end clean")
 
+def clean():
+    printWithSchema("start clean")
+    for file in os.listdir(ROOT_PATH + "\\templates"):
+        path = ROOT_PATH + "\\templates\\"
+        content = ""
+        with open(path + file, "r", encoding="utf-8") as f:
+            content = f.read()
+        srcs = [x[1] for x in re.findall(r'(src|href)="(.*?\.(css|js|jpg|png|img))"', content)]
+        srcs = list(filter(lambda x: not x.startswith("http"), srcs))
+
+        for url in srcs:
+            subUrl = url.replace("..", "")
+
+            while subUrl.startswith("/"):
+                subUrl = subUrl[1:]
+
+            if subUrl.startswith('static'):
+                subUrl = '/' + subUrl
+            else:
+                subUrl = '/static/' + subUrl
+
+            printWithSchema("find broken url:%s" % url)
+            content = content.replace(url, subUrl)
+
+        with open(path + file, "w", encoding="utf-8") as f:
+            f.write(content)
+
+    printWithSchema("end clean")
 
 def dropHref():
     printWithSchema("start drop href")
@@ -66,8 +96,6 @@ class QuickVisual():
         printWithSchema("create jquery-3.3.1.min.js and echarts.js")
         with open(ROOT_PATH + "\\static\\qv\\jquery-3.3.1.min.js", "w", encoding="utf-8") as f, open("resource\\jquery-3.3.1.min.js", "r", encoding="utf-8") as jq:
             f.write(jq.read())
-        with open(ROOT_PATH + "\\static\\qv\\echarts.js", "w", encoding="utf-8") as f, open("resource\\echarts.js", "r", encoding="utf-8") as ec:
-            f.write(ec.read())
 
         self.dataFrameFromCSV = dataFrameFromCSV
         self.pages = []
@@ -82,8 +110,8 @@ class QuickVisual():
             printWithSchema("enable data from csv")
             flaskCode += DATAFRAME_FROM_CSV
         else:
-            flaskCode += CONNECTION
-            flaskCode += DATAFRAME_FROM_MYSQL
+            # flaskCode += CONNECTION
+            flaskCode += DATAFRAME_FROM_MYSQL % CONNECTION
             printWithSchema("enable data from mysql")
             printWithSchema("your mysql setting is %s" % CONNECTION.replace("\n", "").replace(" ", ""))
 
@@ -99,11 +127,11 @@ class QuickVisual():
                 flaskCode += port.generateFlaskCode()
                 jsCode += port.generatorJSCode()
                 cssCode += PORT_CSS_CODE % port.name
+
             with open(ROOT_PATH + "\\static\\qv\\%s.js" % page.name, "w", encoding="utf-8") as f:
                 f.write(jsCode)
-            if not os.path.exists(ROOT_PATH + "\\static\\qv\\%s.css" % page.name):
-                with open(ROOT_PATH + "\\static\\qv\\%s.css" % page.name, "w", encoding="utf-8") as f:
-                    f.write(cssCode)
+            with open(ROOT_PATH + "\\static\\qv\\%s.css" % page.name, "w", encoding="utf-8") as f:
+                f.write(cssCode)
 
         with open(ROOT_PATH + "\\" + "qv.py", "w", encoding="utf-8") as f:
             f.write(flaskCode + FLASK_END_CODE)

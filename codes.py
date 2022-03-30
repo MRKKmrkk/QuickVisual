@@ -79,7 +79,7 @@ if __name__ == '__main__':
     app.run(debug=True)\n"""
 
 DATAFRAME_FROM_MYSQL = """\ndef getData(sql):
-    return pandas.read_sql(sql, con=CONNECTION)\n"""
+    return pandas.read_sql(sql, con=%s)\n"""
 
 PORT_FLASK_CODE_WORDCLOUD = """@app.route("/%s")
 def %s():

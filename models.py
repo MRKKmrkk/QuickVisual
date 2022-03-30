@@ -12,8 +12,11 @@ class Page:
         soup = BeautifulSoup(open(ROOT_PATH + "\\templates\\%s.html" % name, encoding="utf-8"), "html.parser")
         if not soup.find('div', attrs={'id': 'isInit'}):
             soup.find('body').insert(-1, soup.new_tag('div', attrs={'id': 'isInit'}))
+
+            soup.find('head').insert(-1, soup.new_tag('script', attrs={'type': 'text/javascript', 'src': 'https://assets.pyecharts.org/assets/echarts.min.js'}))
+            soup.find('head').insert(-1, soup.new_tag('script', attrs={'type': 'text/javascript', 'src': 'https://assets.pyecharts.org/assets/echarts-wordcloud.min.js'}))
+
             soup.find('body').insert(-1, soup.new_tag('script', attrs={'src': '/static/qv/jquery-3.3.1.min.js'}))
-            soup.find('body').insert(-1, soup.new_tag('script', attrs={'src': '/static/qv/echarts.js'}))
             soup.find('body').insert(-1, soup.new_tag('script', attrs={'src': '/static/qv/%s.js' % self.name}))
             soup.find('head').insert(-1, soup.new_tag('link', attrs={'href': '/static/qv/%s.css' % self.name, 'rel': 'stylesheet'}))
             with open(ROOT_PATH + "\\templates\\%s.html" % name, "w", encoding="utf-8") as f:
