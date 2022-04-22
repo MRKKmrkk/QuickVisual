@@ -13,6 +13,22 @@ $.ajax({
     }
 });\n"""
 
+PORT_JS_CODE2 = """\ntry {
+    echarts.init(document.getElementById('%s')).dispose();
+    var %s = echarts.init(document.getElementById('%s'), 'white', {renderer: 'div'});
+    $.ajax({
+        type: "GET",
+        url: "http://127.0.0.1:5000/%s",
+        dataType: 'json',
+        success: function (result) {
+           %s.setOption(result);
+        }
+    });
+}
+catch(err) {
+    console.log(err.message);
+}\n"""
+
 PORT_CSS_CODE = """\n#%s {
     height: 400px;
     width: 400px;

@@ -1,8 +1,21 @@
-from pyecharts.charts import Bar, Line
-from pyecharts import options as opts
+from quicklyVisual import *
 
-from quickVisual import *
-
-visual = QuickVisual(False)
-visual.addPage(Page("demo"))
-visual.generate()
+qv = createQV("E:\Projects\qv-demo", DataFormat.CSV)
+qv.rollBack()
+#
+# qv.addPage("index")
+# qv.addLinePortById(
+#     "index",
+#     "aaa",
+#     "demoLine",
+#     "type",
+#     "num1",
+#     "数字",
+#     "类型",
+#     "数字",
+#     "demo.csv",
+#     "400px",
+#     "400px"
+# )
+#
+# qv.generate()
