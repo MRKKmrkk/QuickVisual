@@ -1,13 +1,8 @@
-import inspect
 import re
 
-import bs4
-from bs4 import BeautifulSoup
-
-from config import *
 import os
 from models import *
-from codes import *
+from qv.codes import *
 
 
 def printWithSchema(content):

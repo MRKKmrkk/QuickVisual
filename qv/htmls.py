@@ -71,6 +71,14 @@ class HTML:
         for tag in self.soup.find_all(name, attrs=attributes):
             yield tag
 
+    #创建标签
+    def createTag(self, name, attrs, content):
+        tag = self.soup.new_tag(name, attrs=attrs)
+        if content is None:
+            tag.string = ""
+        else:
+            tag.string = content
+        return tag
 
 '''
 基于QV业务的HTML编辑功能
@@ -241,6 +249,6 @@ class QVHtml(HTML):
 
 
 if __name__ == '__main__':
-    html = QVHtml("E:\Projects\QuickVisual\demo.html")
+    html = QVHtml("/demo.html")
     html.rollBack()
     html.save()
