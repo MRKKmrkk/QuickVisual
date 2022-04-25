@@ -1,3 +1,4 @@
+import json
 import os
 
 from qv.codes import FLASK_INIT_CODE, FLASK_END_CODE
@@ -17,6 +18,59 @@ def createQV(projectPath, host=None, user=None, password=None, db=None):
 
     return QuickVisual(projectPath, dataFormat)
 
+# 通过json创建QV
+# todo: 未实现完全
+# 该方法已被放弃
+def createQVByJson(jsonPath):
+    js = json.load(open(jsonPath, "r", encoding="utf-8"))
+
+    # 使用指定数据源创建QV
+    df = js["dataFormat"]
+    if df["flag"] == "sql":
+        qv = createQV(js["path"], df["host"], df["user"], df["password"], df["db"])
+    if df["flag"] == "csv":
+        qv = createQV(js["path"])
+    else:
+        raise RuntimeError("未知数据源")
+
+    # 添加页面
+    for page in js["pages"]:
+        qv.addPage(page["page"], page["isIndex"])
+
+        # 添加接口
+        for port in page["ports"]:
+            if port["type"] == "line":
+                if "id" in port:
+                    pass
+                else:
+                    qv.addLinePort(
+                        page["page"],
+                        port["id"],
+                        port["xName"],
+                        port["yNames"],
+                        port["yDescs"],
+                        port["xAxisName"],
+                        port["yAxisName"],
+                        port["dataSource"]
+                    )
+
+            if port["type"] == "bar":
+                if "id" in port:
+                    pass
+                else:
+                    pass
+
+            if port["type"] == "pie":
+                if "id" in port:
+                    pass
+                else:
+                    pass
+
+            if port["type"] == "wordcloud":
+                if "id" in port:
+                    pass
+                else:
+                    pass
 
 class QuickVisual:
 
@@ -192,6 +246,10 @@ class QuickVisual:
 
         # 生成代码
         for pageName in self.pages:
+            # 如果是主页，则添加主页映射
+            if self.pages[pageName].isIndex:
+                flaskCode += """@app.route("/")"""
+
             flaskCode += self.pages[pageName].generateFlaskCode()
             jsCode = ""
 

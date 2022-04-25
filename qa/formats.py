@@ -18,8 +18,8 @@ class CSVInputFormat(InputFormat):
         super(CSVInputFormat, self).__init__(self.flag)
 
     def generateReadCode(self):
-        return """def getData(path):
-    return pandas.read_csv(path)\n"""
+        return """\ndef getData(path):
+    return pandas.read_csv(path)\n\n"""
 
 class SQLInputFormat(InputFormat):
 
@@ -41,7 +41,7 @@ class SQLInputFormat(InputFormat):
         db="%s"
     )\n
 def getData(sql):
-    return pandas.read_sql(sql, con=getConnection())\n""" % (self.host, self.user, self.password, self.db)
+    return pandas.read_sql(sql, con=getConnection())\n\n""" % (self.host, self.user, self.password, self.db)
 
 class OutputFormat:
 
@@ -62,7 +62,7 @@ class CSVOutputFormat(OutputFormat):
         return """def saveData(path):
     return pandas.to_csv(path)\n"""
 
-class SQLOutFormat(OutputFormat):
+class SQLOutputFormat(OutputFormat):
 
     def __init__(self, host, user, password, db):
         self.host = host
@@ -71,8 +71,8 @@ class SQLOutFormat(OutputFormat):
         self.db = db
         self.flag = "sql"
 
-        super(SQLOutFormat, self).__init__(self.flag)
+        super(SQLOutputFormat, self).__init__(self.flag)
 
     def generateWriteCode(self):
-        return """def getData(sql):
-        return pandas.read_sql(sql, con= create_engine(str(r"mysql+pymysql://%s:" + '%s' + "@%s/%s")))\n""" % (self.user, self.password, self.host, self.db)
+        return """def saveData(df, table):
+        return df.read_sql(table, con=create_engine(str(r"mysql+pymysql://%s:" + '%s' + "@%s/%s")))\n""" % (self.user, self.password, self.host, self.db)
